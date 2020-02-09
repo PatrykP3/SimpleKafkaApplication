@@ -1,0 +1,37 @@
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    shutdown:
+      enabled: true
+    health:
+      enabled: true
+    web:
+      exposure:
+        include: "*"
+
+spring:
+  main:
+    banner-mode: "off"
+  kafka:
+    client-id: "test_processor"
+    consumer:
+      group-id: foo
+      auto-offset-reset: earliest
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: org.nowpat.dto
+
+server:
+  port: 8081
+
+topics:
+  input: test_topic
+  ttd: test_topic_ttd
+  ttsd: test_topic_ttsd
+  nbp: test_topic_nbprates
+  output: test_topic_processed

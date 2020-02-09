@@ -1,0 +1,30 @@
+management:
+  endpoints:
+    shutdown:
+      enabled: true
+    health:
+      enabled: true
+    web:
+      exposure:
+        include: "*"
+
+kafka:
+  host: localhost
+  port: 9092
+
+spring:
+  main:
+    banner-mode: "off"
+  kafka:
+    consumer:
+      group-id: foo
+      auto-offset-reset: earliest
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: org.nowpat.dto
+
+server:
+  port: 8082
