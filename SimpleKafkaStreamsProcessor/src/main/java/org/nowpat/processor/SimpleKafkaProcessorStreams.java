@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @Slf4j
-public class SimpleKafkaStream {
+public class SimpleKafkaProcessorStreams {
 
     @Autowired
     TopicsConfiguration topicsConfiguration;
@@ -39,7 +39,7 @@ public class SimpleKafkaStream {
 
         KStream<String, TransportTestData> kStreamsBuilder = streamsBuilder.stream(topicsConfiguration.getTtd());
         kStreamsBuilder.
-                map((key, value) -> KeyValue.pair(key, new TransportTestData( value.getNumericalValue() + 1, "new text value", new TransportTestSubData(((TransportTestData) value).getSubData().getId() + 1, ((TransportTestData) value).getSubData().getName() + " processed")))).
+                map((key, value) -> KeyValue.pair(key, new TransportTestData( value.getNumericalValue() + 1, "new text value", new TransportTestSubData(value.getSubData().getId() + 1, value.getSubData().getName() + " processed")))).
                 to(topicsConfiguration.getOutput());
 
         return kStreamsBuilder;
@@ -51,7 +51,7 @@ public class SimpleKafkaStream {
         KStream<String, TransportTestSubData> kStreamsBuilder = streamsBuilder.stream(topicsConfiguration.getTtsd());
         kStreamsBuilder.
                 peek((key, value ) -> log.info("value: {}", value.toString())).
-                mapValues((value) -> new TransportTestSubData(value.getId() + 1, value.getName() + "processed")).
+                mapValues((value) -> new TransportTestSubData(value.getId() + 1, value.getName() + " processed")).
                 peek((key, value ) -> log.info("processed value: {}", value.toString())).
                 to(topicsConfiguration.getOutput());
 

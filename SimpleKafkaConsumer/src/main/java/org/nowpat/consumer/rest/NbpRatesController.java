@@ -19,8 +19,8 @@ public class NbpRatesController {
     @Autowired
     NbpRatesRepository repository;
 
-    @GetMapping(value = "/ttsd", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<NBPRates>> getAll() {
+    @GetMapping(value = "/nbprates", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<NBPRates[]>> getAll() {
         return ResponseEntity.status(HttpStatus.OK).body(repository.getAll());
     }
 }
