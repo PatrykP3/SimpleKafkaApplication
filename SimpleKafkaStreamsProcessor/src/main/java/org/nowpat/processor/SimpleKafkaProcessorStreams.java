@@ -3,6 +3,7 @@ package org.nowpat.processor;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KStream;
+import org.nowpat.dto.NBPCurrencyRate;
 import org.nowpat.dto.NBPRates;
 import org.nowpat.dto.TransportTestData;
 import org.nowpat.dto.TransportTestSubData;
@@ -13,6 +14,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.support.KafkaStreamBrancher;
 
 import lombok.extern.slf4j.Slf4j;
+
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @Slf4j
@@ -61,11 +67,31 @@ public class SimpleKafkaProcessorStreams {
     @Bean
     public KStream<String, NBPRates[]> kStreamNbp(StreamsBuilder streamsBuilder) {
 
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+
         KStream<String, NBPRates[]> kStreamsBuilder = streamsBuilder.stream(topicsConfiguration.getNbp());
         kStreamsBuilder.
                 peek((key, value ) -> log.info("value: {}", value.toString())).
                 to(topicsConfiguration.getOutput());
 
+        kStreamsBuilder.
+                flatMapValues((value) -> Arrays.asList(value)).
+                selectKey((key, value) -> value.getEffectiveDate().format(formatter)).
+                flatMapValues((value) -> value.getRates()).
+                selectKey((key, value) -> value.getCode() + "." + key).
+//                flatMap((key, value) -> convert(value.getEffectiveDate().format(formatter), value.getRates())).
+                peek((key, value ) -> log.info("value: {}", value.toString())).
+                to(topicsConfiguration.getOutput());
+
         return kStreamsBuilder;
+    }
+
+    private List<KeyValue<String, NBPCurrencyRate>> convert(String key, List<NBPCurrencyRate> currencyRates) {
+
+        List<KeyValue<String, NBPCurrencyRate>> pairs = new ArrayList<>();
+
+        currencyRates.stream().forEach((currencyRate) -> pairs.add(KeyValue.pair(key, currencyRate)));
+
+        return pairs;
     }
 }

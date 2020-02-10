@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TtsdRepository {
 
-    List<TransportTestSubData> repository = new ArrayList<>();
+    private List<TransportTestSubData> repository = new ArrayList<>();
 
     public void add(TransportTestSubData record) {
 

@@ -2,14 +2,18 @@ package org.nowpat.consumer;
 
 import java.util.Arrays;
 
+import org.nowpat.consumer.repository.NbpCurrencyRateRepository;
 import org.nowpat.consumer.repository.NbpRatesRepository;
 import org.nowpat.consumer.repository.TtsdRepository;
+import org.nowpat.dto.NBPCurrencyRate;
 import org.nowpat.dto.NBPRates;
 import org.nowpat.dto.TransportTestData;
 import org.nowpat.dto.TransportTestSubData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +28,9 @@ public class SimpleKafkaConsumerProcessor {
 
     @Autowired
     private NbpRatesRepository nbpRatesRepository;
+
+    @Autowired
+    private NbpCurrencyRateRepository nbpCurrencyRateRepository;
 
     @KafkaHandler
     public void listen(String payload) {
@@ -46,5 +53,11 @@ public class SimpleKafkaConsumerProcessor {
         log.info("Record number: {}", nbpRates.length);
         Arrays.stream(nbpRates).forEach(nbpRate ->  log.info("Record: {}", nbpRate.toString()));
         nbpRatesRepository.add(nbpRates);
+    }
+
+    @KafkaHandler
+    public void listen(@Header(KafkaHeaders.MESSAGE_KEY) String key, NBPCurrencyRate currencyRate) {
+        log.info("Record: key {}, value {}", key, currencyRate);
+        nbpCurrencyRateRepository.add(currencyRate);
     }
 }

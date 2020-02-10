@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class NbpRatesRepository {
 
-    List<NBPRates[]> repository = new ArrayList<>();
+    private List<NBPRates[]> repository = new ArrayList<>();
 
     public void add(NBPRates[] rates) {
 

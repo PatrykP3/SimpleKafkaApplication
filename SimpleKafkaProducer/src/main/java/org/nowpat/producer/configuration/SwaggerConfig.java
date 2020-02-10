@@ -1,4 +1,4 @@
-package org.nowpat.producer.util;
+package org.nowpat.producer.configuration;
 
 import java.time.LocalDate;
 

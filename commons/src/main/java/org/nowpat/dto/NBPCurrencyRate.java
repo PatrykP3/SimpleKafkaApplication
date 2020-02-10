@@ -7,7 +7,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class NBPCurrency {
+public class NBPCurrencyRate {
 
     private String currency;
     private String code;

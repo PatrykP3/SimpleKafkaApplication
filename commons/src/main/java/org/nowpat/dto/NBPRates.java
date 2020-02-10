@@ -18,5 +18,5 @@ public class NBPRates {
     private String table;
     private String no;
     private LocalDate effectiveDate;
-    private List<NBPCurrency> rates;
+    private List<NBPCurrencyRate> rates;
 }
