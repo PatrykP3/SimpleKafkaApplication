@@ -14,6 +14,7 @@ import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +57,7 @@ public class SimpleKafkaConsumerProcessor {
     }
 
     @KafkaHandler
-    public void listen(@Header(KafkaHeaders.MESSAGE_KEY) String key, NBPCurrencyRate currencyRate) {
+    public void listen(@Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key, @Payload NBPCurrencyRate currencyRate) {
         log.info("Record: key {}, value {}", key, currencyRate);
         nbpCurrencyRateRepository.add(currencyRate);
     }

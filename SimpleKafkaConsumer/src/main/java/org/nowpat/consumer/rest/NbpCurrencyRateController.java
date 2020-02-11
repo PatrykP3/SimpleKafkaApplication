@@ -20,7 +20,7 @@ public class NbpCurrencyRateController {
     @Autowired
     NbpCurrencyRateRepository repository;
 
-    @GetMapping(value = "/nbprates", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/nbcurrencyprates", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<List<NBPCurrencyRate>> getAll() {
 
         return ResponseEntity.status(HttpStatus.OK).body(repository.getAll());

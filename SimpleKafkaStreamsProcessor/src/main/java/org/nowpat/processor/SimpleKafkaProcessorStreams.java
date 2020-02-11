@@ -80,7 +80,7 @@ public class SimpleKafkaProcessorStreams {
                 flatMapValues((value) -> value.getRates()).
                 selectKey((key, value) -> value.getCode() + "." + key).
 //                flatMap((key, value) -> convert(value.getEffectiveDate().format(formatter), value.getRates())).
-                peek((key, value ) -> log.info("value: {}", value.toString())).
+                peek((key, value ) -> log.info("key: {}, value: {}", key, value.toString())).
                 to(topicsConfiguration.getOutput());
 
         return kStreamsBuilder;
