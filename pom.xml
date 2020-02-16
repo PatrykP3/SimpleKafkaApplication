@@ -24,15 +24,14 @@
 
         <kafka.streams.version>2.4.0</kafka.streams.version>
         <kafka.clients.version>2.4.0</kafka.clients.version>
-        <spring.boot.dependencies.version>2.2.3.RELEASE</spring.boot.dependencies.version>
-        <spring.boot.starter.version>2.2.3.RELEASE</spring.boot.starter.version>
-        <spring.boot.starter.actuator.version>2.2.3.RELEASE</spring.boot.starter.actuator.version>
-        <spring.boot.starter.web.version>2.2.3.RELEASE</spring.boot.starter.web.version>
-        <spring.boot.devtools.version>2.2.3.RELEASE</spring.boot.devtools.version>
+        <spring.boot.version>2.2.3.RELEASE</spring.boot.version>
         <spring.kafka.version>2.4.1.RELEASE</spring.kafka.version>
         <springfox.swagger2.version>2.9.2</springfox.swagger2.version>
 
         <lombok.version>1.18.10</lombok.version>
+
+        <apache.commons.version>3.9</apache.commons.version>
+
     </properties>
 
     <dependencyManagement>
@@ -42,7 +41,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.dependencies.version}</version>
+                <version>${spring.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -50,32 +49,26 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
-                <version>${spring.boot.starter.version}</version>
+                <version>${spring.boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
+                <version>${spring.boot.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-actuator</artifactId>
-                <version>${spring.boot.starter.actuator.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger2</artifactId>
-                <version>${springfox.swagger2.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger-ui</artifactId>
-                <version>${springfox.swagger2.version}</version>
+                <version>${spring.boot.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-devtools</artifactId>
                 <optional>true</optional>
-                <version>${spring.boot.devtools.version}</version>
+                <version>${spring.boot.version}</version>
             </dependency>
 
             <dependency>
@@ -113,6 +106,24 @@
                 <groupId>org.springframework.kafka</groupId>
                 <artifactId>spring-kafka-test</artifactId>
                 <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${springfox.swagger2.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${springfox.swagger2.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apache.commons.version}</version>
             </dependency>
 
         </dependencies>

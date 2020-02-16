@@ -1,16 +1,13 @@
 management:
-  endpoints:
+  endpoint:
     shutdown:
       enabled: true
     health:
       enabled: true
+  endpoints:
     web:
       exposure:
         include: "*"
-
-kafka:
-  host: localhost
-  port: 9092
 
 spring:
   main:
@@ -24,7 +21,14 @@ spring:
         spring:
           json:
             trusted:
-              packages: org.nowpat.dto
+              packages: org.nowpat.dto,org.apache.commons.lang3.tuple
+  datasource:
+    username: sa
+    password: sa
+    url: jdbc:h2:mem:testdb
+  h2:
+    console:
+      enabled: true
 
 server:
   port: 8082

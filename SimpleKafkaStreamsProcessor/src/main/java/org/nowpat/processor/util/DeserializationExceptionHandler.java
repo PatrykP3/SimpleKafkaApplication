@@ -9,7 +9,7 @@ public class DeserializationExceptionHandler implements org.apache.kafka.streams
 
     @Override
     public DeserializationHandlerResponse handle(ProcessorContext context, ConsumerRecord<byte[], byte[]> record, Exception exception) {
-        return DeserializationHandlerResponse.CONTINUE;
+        return DeserializationHandlerResponse.FAIL;
     }
 
     @Override

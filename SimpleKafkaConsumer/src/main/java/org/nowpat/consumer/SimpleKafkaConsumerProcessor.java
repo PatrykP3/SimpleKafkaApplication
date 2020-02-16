@@ -2,13 +2,8 @@ package org.nowpat.consumer;
 
 import java.util.Arrays;
 
-import org.nowpat.consumer.repository.NbpCurrencyRateRepository;
-import org.nowpat.consumer.repository.NbpRatesRepository;
-import org.nowpat.consumer.repository.TtsdRepository;
-import org.nowpat.dto.NBPCurrencyRate;
-import org.nowpat.dto.NBPRates;
-import org.nowpat.dto.TransportTestData;
-import org.nowpat.dto.TransportTestSubData;
+import org.nowpat.consumer.repository.*;
+import org.nowpat.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -32,6 +27,12 @@ public class SimpleKafkaConsumerProcessor {
 
     @Autowired
     private NbpCurrencyRateRepository nbpCurrencyRateRepository;
+
+    @Autowired
+    private NbpCurrencyRateWithDateRepository nbpCurrencyRateWithDateRepository;
+
+    @Autowired
+    private CurrencyMeanValueRepository currencyMeanValueRepository;
 
     @KafkaHandler
     public void listen(String payload) {
@@ -60,5 +61,20 @@ public class SimpleKafkaConsumerProcessor {
     public void listen(@Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key, @Payload NBPCurrencyRate currencyRate) {
         log.info("Record: key {}, value {}", key, currencyRate);
         nbpCurrencyRateRepository.add(currencyRate);
+    }
+
+    @KafkaHandler
+    public void listen(@Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key, @Payload DateValue currencyRate) {
+        log.info("Record: key {}, value {}", key, currencyRate);
+        NBPCurrencyRateWithDate x = nbpCurrencyRateWithDateRepository.findByCodeAndDate(key, currencyRate.getDate());
+        if(nbpCurrencyRateWithDateRepository.findByCodeAndDate(key, currencyRate.getDate()) == null) {
+            nbpCurrencyRateWithDateRepository.save(new NBPCurrencyRateWithDate(0L, key, currencyRate.getDate(), currencyRate.getValue()));
+        }
+    }
+
+    @KafkaHandler
+    public void listen(@Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key, @Payload CurrencyMeanData currencyMeanData) {
+        log.info("Record: key {}, value {}", key, currencyMeanData);
+        currencyMeanValueRepository.save(currencyMeanData);
     }
 }

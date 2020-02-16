@@ -1,12 +1,16 @@
 package org.nowpat.processor;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.kstream.Aggregator;
+import org.apache.kafka.streams.kstream.Initializer;
 import org.apache.kafka.streams.kstream.KStream;
-import org.nowpat.dto.NBPCurrencyRate;
-import org.nowpat.dto.NBPRates;
-import org.nowpat.dto.TransportTestData;
-import org.nowpat.dto.TransportTestSubData;
+import org.nowpat.dto.*;
 import org.nowpat.processor.configuration.TopicsConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,17 +19,14 @@ import org.springframework.kafka.support.KafkaStreamBrancher;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 @Configuration
 @Slf4j
 public class SimpleKafkaProcessorStreams {
 
     @Autowired
     TopicsConfiguration topicsConfiguration;
+
+    private DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
     @Bean
     public KStream<String, Object> kStreamBranches(StreamsBuilder streamsBuilder) {
@@ -67,31 +68,86 @@ public class SimpleKafkaProcessorStreams {
     @Bean
     public KStream<String, NBPRates[]> kStreamNbp(StreamsBuilder streamsBuilder) {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
-
         KStream<String, NBPRates[]> kStreamsBuilder = streamsBuilder.stream(topicsConfiguration.getNbp());
-        kStreamsBuilder.
+
+        kStreamsBuilder.    // output: not processed data - array of NBPRates
                 peek((key, value ) -> log.info("value: {}", value.toString())).
                 to(topicsConfiguration.getOutput());
 
-        kStreamsBuilder.
+        kStreamsBuilder.    //output: "currency code.date" as a key, NBPCurrencyRate as a value
                 flatMapValues((value) -> Arrays.asList(value)).
                 selectKey((key, value) -> value.getEffectiveDate().format(formatter)).
                 flatMapValues((value) -> value.getRates()).
                 selectKey((key, value) -> value.getCode() + "." + key).
-//                flatMap((key, value) -> convert(value.getEffectiveDate().format(formatter), value.getRates())).
                 peek((key, value ) -> log.info("key: {}, value: {}", key, value.toString())).
                 to(topicsConfiguration.getOutput());
+
+        kStreamsBuilder.    // output: currency code as a key, DateValue of date and currency value as a value - not finished
+                flatMapValues((value) -> Arrays.asList(value)).
+                selectKey((key, value) -> value.getEffectiveDate().format(formatter)).
+                peek((key, value ) -> log.info("step 1 key: {}, value: {}", key, value.toString())).
+                flatMapValues((value) -> value.getRates()).
+                peek((key, value ) -> log.info("step 2 key: {}, value: {}", key, value.toString())).
+                map((key, value) -> KeyValue.pair(value.getCode(), new DateValue(LocalDate.parse(key, formatter), value.getMid()))). //key: currency code, value: date and currency value
+                peek((key, value ) -> log.info("step 3 key : {}, value: {}", key, value.toString())).
+                to(topicsConfiguration.getOutput());
+
+//        kStreamsBuilder.  // output: currency code as a key, time range and calculated mean as a value
+//                flatMapValues((value) -> Arrays.asList(value)).
+//                selectKey((key, value) -> value.getEffectiveDate().format(formatter)).
+//                peek((key, value ) -> log.info("1 key: {}, value: {}", key, value.toString())).
+//                flatMapValues((value) -> value.getRates()).
+//                peek((key, value ) -> log.info("2 key: {}, value: {}", key, value.toString())).
+//                map((key, value) -> KeyValue.pair(value.getCode(), new MutablePair<LocalDate, Float>(LocalDate.parse(key, formatter), value.getMid()))). //key: currency code, value: date and currency value
+//                peek((key, value ) -> log.info("3 key : {}, value: {}", key, value.toString())).
+//                groupByKey().
+//                aggregate(new CurrencyDataItializer(), new CurrencyDataAggregator(), Materialized.with(new Serdes.StringSerde(), new JsonSerde<>())).
+//                toStream().
+//                peek((key, value ) -> log.info("4 key: {}, value: {}", key, value.toString())).
+//                to(topicsConfiguration.getOutput());
 
         return kStreamsBuilder;
     }
 
-    private List<KeyValue<String, NBPCurrencyRate>> convert(String key, List<NBPCurrencyRate> currencyRates) {
+    private class CurrencyDataItializer implements Initializer {
 
-        List<KeyValue<String, NBPCurrencyRate>> pairs = new ArrayList<>();
+        @Override
+        public CurrencyMeanData apply() {
+            return new CurrencyMeanData(null, null, null, 0, 0);
+        }
+    }
 
-        currencyRates.stream().forEach((currencyRate) -> pairs.add(KeyValue.pair(key, currencyRate)));
+    private class CurrencyDataAggregator implements Aggregator<String, MutablePair<LocalDate, Float>, CurrencyMeanData> {
 
-        return pairs;
+        @Override
+        public CurrencyMeanData apply(String key, MutablePair<LocalDate, Float> value, CurrencyMeanData result) {
+
+            result.setCode(key);
+
+            LocalDate incomingDate = value.getKey();
+            if(result.getDateFrom() == null) {
+                result.setDateFrom(incomingDate);
+            }
+            else {
+                if (incomingDate.isBefore(result.getDateFrom())) {
+                    result.setDateFrom(incomingDate);
+                }
+            }
+
+            if(result.getDateTo() == null) {
+                result.setDateTo(incomingDate);
+            }
+            else {
+                if (incomingDate.isAfter(result.getDateTo())) {
+                    result.setDateTo(incomingDate);
+                }
+            }
+
+            result.setCount(result.getCount() + 1);
+            if(value.getValue() != null) {
+                result.setSum(result.getSum() + value.getValue());
+            }
+            return result;
+        }
     }
 }

@@ -1,5 +1,6 @@
 package org.nowpat.producer.rest;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -8,6 +9,7 @@ import org.nowpat.dto.NBPRates;
 import org.nowpat.producer.nbpapi.NbpApiRatesReader;
 import org.nowpat.producer.sender.SimpleKafkaProducerSender;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +29,15 @@ public class TestController {
     @Autowired
     SimpleKafkaProducerSender simpleKafkaProducerSender;
 
-    @GetMapping(value = "/test", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<String> getCurrencyTables(String currencyTable, @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom, @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo) {
-//    public ResponseEntity<String> getCurrencyTables(String currencyTable, LocalDate dateFrom, LocalDate dateTo) {
-    public ResponseEntity<String> getCurrencyTables(String currencyTable, String dateFrom, String dateTo) {
+    private DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
-//        Optional<NBPRates> optionalRates = nbpApiRatesReader.getData(currencyTable, dateFrom.format(dateTimeFormatter), dateTo.format(dateTimeFormatter));
-        Optional<NBPRates[]> optionalRates = nbpApiRatesReader.getData(currencyTable, dateFrom, dateTo);
+    @PostMapping(value = "/test", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> getCurrencyTables(@RequestParam String currencyTable, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo) {
+//    public ResponseEntity<String> getCurrencyTables(String currencyTable, LocalDate dateFrom, LocalDate dateTo) {
+//    public ResponseEntity<String> getCurrencyTables(String currencyTable, String dateFrom, String dateTo) {
+
+        Optional<NBPRates[]> optionalRates = nbpApiRatesReader.getData(currencyTable, dateFrom.format(dateTimeFormatter), dateTo.format(dateTimeFormatter));
+//        Optional<NBPRates[]> optionalRates = nbpApiRatesReader.getData(currencyTable, formatter.format(dateFrom), formatter.format(dateTo));
 
         if(optionalRates.isPresent()) {
 
