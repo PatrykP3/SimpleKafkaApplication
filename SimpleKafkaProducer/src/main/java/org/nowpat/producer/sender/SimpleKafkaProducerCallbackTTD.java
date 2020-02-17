@@ -6,7 +6,7 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class SuccessCallbackTTD implements ListenableFutureCallback<SendResult> {
+public class SimpleKafkaProducerCallbackTTD implements ListenableFutureCallback<SendResult> {
 
     @Override
     public void onSuccess(SendResult sendResult) {

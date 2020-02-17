@@ -36,7 +36,7 @@ public class SimpleKafkaProcessorStreams {
         KafkaStreamBrancher kafkaStreamBrancher = new KafkaStreamBrancher<String, Object>()
                 .branch((key, value) -> value instanceof TransportTestData, ks -> ks.to(topicsConfiguration.getTtd()))
                 .branch((key, value) -> value instanceof TransportTestSubData, ks -> ks.to(topicsConfiguration.getTtsd()))
-                .branch((key, value) -> value instanceof NBPRates[], ks -> ks.to(topicsConfiguration.getNbp()));
+                .branch((key, value) -> value instanceof NbpRates[], ks -> ks.to(topicsConfiguration.getNbp()));
 
         return kafkaStreamBrancher.onTopOf(kStreamsBuilder);
     }
@@ -66,15 +66,15 @@ public class SimpleKafkaProcessorStreams {
     }
 
     @Bean
-    public KStream<String, NBPRates[]> kStreamNbp(StreamsBuilder streamsBuilder) {
+    public KStream<String, NbpRates[]> kStreamNbp(StreamsBuilder streamsBuilder) {
 
-        KStream<String, NBPRates[]> kStreamsBuilder = streamsBuilder.stream(topicsConfiguration.getNbp());
+        KStream<String, NbpRates[]> kStreamsBuilder = streamsBuilder.stream(topicsConfiguration.getNbp());
 
-        kStreamsBuilder.    // output: not processed data - array of NBPRates
+        kStreamsBuilder.    // output: not processed data - array of NbpRates
                 peek((key, value ) -> log.info("value: {}", value.toString())).
                 to(topicsConfiguration.getOutput());
 
-        kStreamsBuilder.    //output: "currency code.date" as a key, NBPCurrencyRate as a value
+        kStreamsBuilder.    //output: "currency code.date" as a key, NbpCurrencyRate as a value
                 flatMapValues((value) -> Arrays.asList(value)).
                 selectKey((key, value) -> value.getEffectiveDate().format(formatter)).
                 flatMapValues((value) -> value.getRates()).

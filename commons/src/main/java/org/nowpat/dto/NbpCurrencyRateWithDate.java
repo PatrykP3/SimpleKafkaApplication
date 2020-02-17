@@ -14,7 +14,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class NBPCurrencyRateWithDate {
+public class NbpCurrencyRateWithDate {
 
     @Id
     @GeneratedValue

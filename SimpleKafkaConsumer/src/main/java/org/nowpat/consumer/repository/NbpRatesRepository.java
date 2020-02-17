@@ -3,20 +3,20 @@ package org.nowpat.consumer.repository;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.nowpat.dto.NBPRates;
+import org.nowpat.dto.NbpRates;
 import org.springframework.stereotype.Component;
 
 @Component
 public class NbpRatesRepository {
 
-    private List<NBPRates[]> repository = new ArrayList<>();
+    private List<NbpRates[]> repository = new ArrayList<>();
 
-    public void add(NBPRates[] rates) {
+    public void add(NbpRates[] rates) {
 
         repository.add(rates);
     }
 
-    public List<NBPRates[]> getAll() {
+    public List<NbpRates[]> getAll() {
 
         return repository;
     }

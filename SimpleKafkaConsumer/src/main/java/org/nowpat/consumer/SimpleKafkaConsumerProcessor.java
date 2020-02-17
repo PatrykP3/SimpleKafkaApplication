@@ -51,14 +51,14 @@ public class SimpleKafkaConsumerProcessor {
     }
 
     @KafkaHandler
-    public void listen(NBPRates[] nbpRates) {
+    public void listen(NbpRates[] nbpRates) {
         log.info("Record number: {}", nbpRates.length);
         Arrays.stream(nbpRates).forEach(nbpRate ->  log.info("Record: {}", nbpRate.toString()));
         nbpRatesRepository.add(nbpRates);
     }
 
     @KafkaHandler
-    public void listen(@Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key, @Payload NBPCurrencyRate currencyRate) {
+    public void listen(@Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key, @Payload NbpCurrencyRate currencyRate) {
         log.info("Record: key {}, value {}", key, currencyRate);
         nbpCurrencyRateRepository.add(currencyRate);
     }
@@ -66,9 +66,9 @@ public class SimpleKafkaConsumerProcessor {
     @KafkaHandler
     public void listen(@Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key, @Payload DateValue currencyRate) {
         log.info("Record: key {}, value {}", key, currencyRate);
-        NBPCurrencyRateWithDate x = nbpCurrencyRateWithDateRepository.findByCodeAndDate(key, currencyRate.getDate());
+        NbpCurrencyRateWithDate x = nbpCurrencyRateWithDateRepository.findByCodeAndDate(key, currencyRate.getDate());
         if(nbpCurrencyRateWithDateRepository.findByCodeAndDate(key, currencyRate.getDate()) == null) {
-            nbpCurrencyRateWithDateRepository.save(new NBPCurrencyRateWithDate(0L, key, currencyRate.getDate(), currencyRate.getValue()));
+            nbpCurrencyRateWithDateRepository.save(new NbpCurrencyRateWithDate(0L, key, currencyRate.getDate(), currencyRate.getValue()));
         }
     }
 

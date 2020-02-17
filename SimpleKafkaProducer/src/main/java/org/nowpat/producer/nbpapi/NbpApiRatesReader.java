@@ -3,7 +3,7 @@ package org.nowpat.producer.nbpapi;
 import java.net.URI;
 import java.util.Optional;
 
-import org.nowpat.dto.NBPRates;
+import org.nowpat.dto.NbpRates;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
@@ -31,15 +31,15 @@ public class NbpApiRatesReader {
     }
 
 
-    public Optional<NBPRates[]> getData(String pathPart1, String pathPart2, String pathPart3) {
+    public Optional<NbpRates[]> getData(String pathPart1, String pathPart2, String pathPart3) {
 
         URI uri = nbpApiUriFactory.getUri(pathPart1, pathPart2, pathPart3);
-        ResponseEntity<NBPRates[]> entity;
+        ResponseEntity<NbpRates[]> entity;
 
         log.info("query: {}", uri);
 
         try {
-            entity = restTemplate.getForEntity(uri, NBPRates[].class);
+            entity = restTemplate.getForEntity(uri, NbpRates[].class);
 
         } catch (RestClientException ex) {
 

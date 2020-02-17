@@ -13,10 +13,10 @@ import lombok.ToString;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 @ToString
-public class NBPRates {
+public class NbpRates {
 
     private String table;
     private String no;
     private LocalDate effectiveDate;
-    private List<NBPCurrencyRate> rates;
+    private List<NbpCurrencyRate> rates;
 }

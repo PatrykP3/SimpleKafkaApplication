@@ -1,6 +1,6 @@
 package org.nowpat.producer.sender;
 
-import org.nowpat.dto.NBPRates;
+import org.nowpat.dto.NbpRates;
 import org.nowpat.dto.TransportTestData;
 import org.nowpat.dto.TransportTestSubData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class SimpleKafkaProducerSender {
     private KafkaTemplate<String, TransportTestSubData> kafkaTemplateTTSD;
 
     @Autowired
-    private KafkaTemplate<String, NBPRates[]> kafkaTemplateNbpR;
+    private KafkaTemplate<String, NbpRates[]> kafkaTemplateNbpR;
 
 //    @Autowired
 //    private SimpleKafkaProducerListener producerTTDListener;
@@ -34,7 +34,7 @@ public class SimpleKafkaProducerSender {
     public void send(String s) {
 
         ListenableFuture<SendResult<String, String>> sendResult = kafkaTemplateString.send("test_topic", s);
-        sendResult.addCallback(new SuccessCallbackString());
+        sendResult.addCallback(new SimpleKafkaProducerCallbackString());
         log.info("Record: {}", s);
     }
 
@@ -42,7 +42,7 @@ public class SimpleKafkaProducerSender {
 
         ProducerListener<String, TransportTestData> x;
         ListenableFuture<SendResult<String, TransportTestData>> sendResult = kafkaTemplateTTD.send("test_topic", ttd);
-        sendResult.addCallback(new SuccessCallbackTTD());
+        sendResult.addCallback(new SimpleKafkaProducerCallbackTTD());
         log.info("Record: {}", ttd.toString());
     }
 
@@ -50,16 +50,16 @@ public class SimpleKafkaProducerSender {
 
         ProducerListener<String, TransportTestSubData> x;
         ListenableFuture<SendResult<String, TransportTestSubData>> sendResult = kafkaTemplateTTSD.send("test_topic", ttsd);
-        sendResult.addCallback(new SuccessCallbackTTD());
+        sendResult.addCallback(new SimpleKafkaProducerCallbackTTD());
         log.info("Record: {}", ttsd.toString());
     }
 
-    public ListenableFuture<SendResult<String, NBPRates[]>> send(NBPRates[] nbpRates) {
+    public ListenableFuture<SendResult<String, NbpRates[]>> send(NbpRates[] nbpRates) {
 
-        ProducerListener<String, NBPRates[]> x;
+        ProducerListener<String, NbpRates[]> x;
 //        kafkaTemplateNbpR.setProducerListener(producerTTDListener);
         log.info("Sending record: {}", nbpRates.toString());
-        ListenableFuture<SendResult<String, NBPRates[]>> sendResult = kafkaTemplateNbpR.send("test_topic", nbpRates);
+        ListenableFuture<SendResult<String, NbpRates[]>> sendResult = kafkaTemplateNbpR.send("test_topic", nbpRates);
         return sendResult;
     }
 }

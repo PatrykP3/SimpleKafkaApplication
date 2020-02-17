@@ -1,6 +1,6 @@
 package org.nowpat.consumer.repository;
 
-import org.nowpat.dto.NBPCurrencyRate;
+import org.nowpat.dto.NbpCurrencyRate;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -9,13 +9,13 @@ import java.util.List;
 @Component
 public class NbpCurrencyRateRepository {
 
-    private List<NBPCurrencyRate> repository = new ArrayList<>();
+    private List<NbpCurrencyRate> repository = new ArrayList<>();
 
-    public void add(NBPCurrencyRate rate) {
+    public void add(NbpCurrencyRate rate) {
         repository.add(rate);
     }
 
-    public List<NBPCurrencyRate> getAll() {
+    public List<NbpCurrencyRate> getAll() {
 
         return repository;
     }
