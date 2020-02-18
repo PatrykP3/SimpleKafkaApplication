@@ -24,11 +24,20 @@ spring:
               packages: org.nowpat.dto,org.apache.commons.lang3.tuple
   datasource:
     username: sa
-    password: sa
+    password:
     url: jdbc:h2:mem:testdb
   h2:
     console:
       enabled: true
+  data:
+    rest:
+      base-path: /consumer
 
 server:
   port: 8082
+  context-path: /consumer
+
+paths:
+  base: /consumer
+  collect: /collect
+  allnbprates: /allnbprates

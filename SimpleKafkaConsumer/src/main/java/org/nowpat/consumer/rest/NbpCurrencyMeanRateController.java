@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/rest")
+@RestController
 public class NbpCurrencyMeanRateController {
 
     @Autowired
@@ -31,8 +31,8 @@ public class NbpCurrencyMeanRateController {
     ResponseEntity<String> getMeanValue(@RequestParam String code, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo) {
 
         ArrayList<NbpCurrencyRateWithDate> values = repository.findByCodeAndDateBetween(code, dateFrom, dateTo);
-        Double sum = values.stream().mapToDouble(v -> v.getMid()).sum();
-        Long count = values.stream().count();
+        double sum = values.stream().mapToDouble(v -> v.getMid()).sum();
+        int count = values.size();
         return ResponseEntity.status(HttpStatus.OK).body(String.valueOf(sum/count));
     }
 }

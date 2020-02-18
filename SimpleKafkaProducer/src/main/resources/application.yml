@@ -29,3 +29,6 @@ nbpapi:
   host: api.nbp.pl
   path: /api/exchangerates/tables/{p1}/{p2}/{p3}
 
+paths:
+  base: /producer
+  collect: /collect
