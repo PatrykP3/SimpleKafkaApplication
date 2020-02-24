@@ -15,7 +15,7 @@ import lombok.ToString;
 @ToString
 public class NbpRates {
 
-    private String table;
+    private Character table;
     private String no;
     private LocalDate effectiveDate;
     private List<NbpCurrencyRate> rates;

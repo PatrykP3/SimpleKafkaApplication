@@ -31,9 +31,9 @@ public class NbpApiRatesReader {
     }
 
 
-    public Optional<NbpRates[]> getData(String pathPart1, String pathPart2, String pathPart3) {
+    public Optional<NbpRates[]> getData(Character table, String dateFrom, String dateTo) {
 
-        URI uri = nbpApiUriFactory.getUri(pathPart1, pathPart2, pathPart3);
+        URI uri = nbpApiUriFactory.getUri(String.valueOf(table), dateFrom, dateTo);
         ResponseEntity<NbpRates[]> entity;
 
         log.info("query: {}", uri);

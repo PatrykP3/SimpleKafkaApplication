@@ -28,12 +28,12 @@ public class ProcessorConfiguration {
 
         Map<String, Object> config = new HashMap<>();
         config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
-        config.put(StreamsConfig.APPLICATION_ID_CONFIG, "testid");
+        config.put(StreamsConfig.APPLICATION_ID_CONFIG, "processor");
         config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, UniversalDataSerde.class);
         config.put(StreamsConfig.DEFAULT_DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG, DeserializationExceptionHandler.class);
-        config.put(JsonDeserializer.TRUSTED_PACKAGES, "org.nowpat.dto,org.apache.commons.lang3.tuple");
         config.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, true);
+        config.put(JsonDeserializer.TRUSTED_PACKAGES, "org.nowpat.dto,org.apache.commons.lang3.tuple");
         config.put(JsonDeserializer.KEY_DEFAULT_TYPE, String.class);
         config.put(JsonDeserializer.VALUE_DEFAULT_TYPE, CurrencyMeanData.class);
 

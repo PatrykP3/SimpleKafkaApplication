@@ -1,3 +1,18 @@
+spring:
+  main:
+    banner-mode: "off"
+  kafka:
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
+
+server:
+  port: 8080
+  servlet:
+    context-path: /apibase
+
 management:
   endpoint:
     shutdown:
@@ -11,24 +26,10 @@ management:
       exposure:
         include: "*"
 
-spring:
-  main:
-    banner-mode: "off"
-  kafka:
-    producer:
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-  jackson:
-    serialization:
-      write_dates_as_timestamps: false
-
-server:
-  port: 8080
-
 nbpapi:
   protocol: http
   host: api.nbp.pl
   path: /api/exchangerates/tables/{p1}/{p2}/{p3}
 
 paths:
-  base: /producer
   collect: /collect

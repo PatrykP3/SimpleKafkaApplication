@@ -5,15 +5,15 @@ import java.util.Map;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serializer;
-import org.nowpat.dto.TransportTestData;
+import org.nowpat.dto.CurrencyMeanData;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
 
-public class UniversalDataSerde<T> implements Serde<T> {
+public class CurrencyMeanValueSerde implements Serde<CurrencyMeanData> {
 
-        final private JsonSerializer<T> serializer = new JsonSerializer<T>();
-        final private JsonDeserializer<T> deserializer = new JsonDeserializer<T>();
+        final private JsonSerializer serializer = new JsonSerializer<CurrencyMeanData>();
+        final private JsonDeserializer deserializer = new JsonDeserializer<CurrencyMeanData>();
 
         @Override
         public void configure(Map<String, ?> configs, boolean isKey) {
@@ -28,12 +28,12 @@ public class UniversalDataSerde<T> implements Serde<T> {
         }
 
         @Override
-        public Serializer<T> serializer() {
+        public Serializer<CurrencyMeanData> serializer() {
             return serializer;
         }
 
         @Override
-        public Deserializer<T> deserializer() {
+        public Deserializer<CurrencyMeanData> deserializer() {
             return deserializer;
         }
     }

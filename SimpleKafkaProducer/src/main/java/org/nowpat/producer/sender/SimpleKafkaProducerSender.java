@@ -28,9 +28,6 @@ public class SimpleKafkaProducerSender {
     @Autowired
     private KafkaTemplate<String, NbpRates[]> kafkaTemplateNbpR;
 
-//    @Autowired
-//    private SimpleKafkaProducerListener producerTTDListener;
-
     public void send(String s) {
 
         ListenableFuture<SendResult<String, String>> sendResult = kafkaTemplateString.send("test_topic", s);
@@ -58,7 +55,7 @@ public class SimpleKafkaProducerSender {
 
         ProducerListener<String, NbpRates[]> x;
 //        kafkaTemplateNbpR.setProducerListener(producerTTDListener);
-        log.info("Sending record: {}", nbpRates.toString());
+        log.info("Sending record");
         ListenableFuture<SendResult<String, NbpRates[]>> sendResult = kafkaTemplateNbpR.send("test_topic", nbpRates);
         return sendResult;
     }

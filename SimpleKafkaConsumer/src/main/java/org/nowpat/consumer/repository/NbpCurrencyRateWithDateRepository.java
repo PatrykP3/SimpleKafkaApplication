@@ -11,6 +11,6 @@ import org.springframework.stereotype.Component;
 public interface NbpCurrencyRateWithDateRepository extends CrudRepository<NbpCurrencyRateWithDate, Long> {
 
     ArrayList<NbpCurrencyRateWithDate> findAll();
-    NbpCurrencyRateWithDate findByCodeAndDate(String code, LocalDate date);
-    ArrayList<NbpCurrencyRateWithDate> findByCodeAndDateBetween(String code, LocalDate dateFrom, LocalDate dateTo);
+    NbpCurrencyRateWithDate findByTableAndCodeAndDate(Character table, String code, LocalDate date);
+    ArrayList<NbpCurrencyRateWithDate> findByTableAndCodeAndDateBetween(Character table, String code, LocalDate dateFrom, LocalDate dateTo);
 }

@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("${paths.base}")
+@RestController
 public class NbpCurrencyRateController {
 
     @Autowired
     NbpCurrencyRateRepository repository;
 
-    @GetMapping(value = "/nbcurrencyprates", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "${paths.nbpcurrencyrates.all}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<List<NbpCurrencyRate>> getAll() {
 
         return ResponseEntity.status(HttpStatus.OK).body(repository.getAll());

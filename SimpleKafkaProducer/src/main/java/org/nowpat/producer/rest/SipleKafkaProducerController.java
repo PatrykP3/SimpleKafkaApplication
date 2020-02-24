@@ -18,7 +18,6 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("${paths.base}")
 public class SipleKafkaProducerController {
 
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
@@ -32,7 +31,7 @@ public class SipleKafkaProducerController {
     private DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
     @PostMapping(value = "${paths.collect}", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> getCurrencyTables(@RequestParam String currencyTable, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo) {
+    public ResponseEntity<String> getCurrencyTables(@RequestParam Character currencyTable, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo) {
 
         Optional<NbpRates[]> optionalRates = nbpApiRatesReader.getData(currencyTable, dateFrom.format(dateTimeFormatter), dateTo.format(dateTimeFormatter));
 

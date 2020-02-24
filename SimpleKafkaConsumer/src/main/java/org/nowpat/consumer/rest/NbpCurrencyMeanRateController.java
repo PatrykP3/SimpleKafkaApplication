@@ -3,6 +3,7 @@ package org.nowpat.consumer.rest;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.nowpat.consumer.repository.NbpCurrencyRateWithDateRepository;
 import org.nowpat.dto.NbpCurrencyRateWithDate;
@@ -21,16 +22,17 @@ public class NbpCurrencyMeanRateController {
     @Autowired
     NbpCurrencyRateWithDateRepository repository;
 
-    @GetMapping(value = "/nbcurrencyprateswithdates", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<List<NbpCurrencyRateWithDate>> getBetween(@RequestParam String code, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo) {
+    @GetMapping(value = "${paths.nbcurrencyratewithdate.bydates}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<NbpCurrencyRateWithDate>> getBetween(@RequestParam Character table, @RequestParam String code, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(repository.findByCodeAndDateBetween(code, dateFrom, dateTo));
+        return ResponseEntity.status(HttpStatus.OK).body(repository.findByTableAndCodeAndDateBetween(table, code, dateFrom, dateTo));
     }
 
-    @GetMapping(value = "/nbcurrencyprateswithdatesmeanvalue", produces = MediaType.TEXT_PLAIN_VALUE)
-    ResponseEntity<String> getMeanValue(@RequestParam String code, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo) {
+    @GetMapping(value = "${paths.nbcurrencyratewithdate.meanvalue}", produces = MediaType.TEXT_PLAIN_VALUE)
+    ResponseEntity<String> getMeanValue(@RequestParam Character table, @RequestParam String code, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo) {
 
-        ArrayList<NbpCurrencyRateWithDate> values = repository.findByCodeAndDateBetween(code, dateFrom, dateTo);
+        ArrayList<NbpCurrencyRateWithDate> values = repository.findByTableAndCodeAndDateBetween(table, code, dateFrom, dateTo);
+
         double sum = values.stream().mapToDouble(v -> v.getMid()).sum();
         int count = values.size();
         return ResponseEntity.status(HttpStatus.OK).body(String.valueOf(sum/count));

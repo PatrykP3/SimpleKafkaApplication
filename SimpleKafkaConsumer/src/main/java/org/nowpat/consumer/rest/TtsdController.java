@@ -13,13 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/rest")
 public class TtsdController {
 
     @Autowired
     TtsdRepository repository;
 
-    @GetMapping(value = "/ttsd", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "${paths.ttsd}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<TransportTestSubData>> getAll() {
             return ResponseEntity.status(HttpStatus.OK).body(repository.getAll());
     }

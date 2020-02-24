@@ -66,9 +66,9 @@ public class SimpleKafkaConsumerProcessor {
     @KafkaHandler
     public void listen(@Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key, @Payload DateValue currencyRate) {
         log.info("Record: key {}, value {}", key, currencyRate);
-        NbpCurrencyRateWithDate x = nbpCurrencyRateWithDateRepository.findByCodeAndDate(key, currencyRate.getDate());
-        if(nbpCurrencyRateWithDateRepository.findByCodeAndDate(key, currencyRate.getDate()) == null) {
-            nbpCurrencyRateWithDateRepository.save(new NbpCurrencyRateWithDate(0L, key, currencyRate.getDate(), currencyRate.getValue()));
+        NbpCurrencyRateWithDate x = nbpCurrencyRateWithDateRepository.findByTableAndCodeAndDate(currencyRate.getTable(), key, currencyRate.getDate());
+        if(nbpCurrencyRateWithDateRepository.findByTableAndCodeAndDate(currencyRate.getTable(), key, currencyRate.getDate()) == null) {
+            nbpCurrencyRateWithDateRepository.save(new NbpCurrencyRateWithDate(0L, currencyRate.getTable(), key, currencyRate.getDate(), currencyRate.getValue()));
         }
     }
 

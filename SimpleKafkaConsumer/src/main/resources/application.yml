@@ -21,7 +21,7 @@ spring:
         spring:
           json:
             trusted:
-              packages: org.nowpat.dto,org.apache.commons.lang3.tuple
+              packages: org.nowpat.dto
   datasource:
     username: sa
     password:
@@ -35,9 +35,16 @@ spring:
 
 server:
   port: 8082
-  context-path: /consumer
+  servlet:
+    context-path: /apibase
 
 paths:
-  base: /consumer
-  collect: /collect
-  allnbprates: /allnbprates
+  ttd: /ttd
+  ttsd: /ttsd
+  allnbprates:
+    notprocessed: /allnbpratesnotprocessed
+  nbpcurrencyrates:
+    all: /allnbpcurrencies
+  nbcurrencyratewithdate:
+    bydates: /nbpcurrencyratewithdatebydates
+    meanvalue: /nbpcurrencyratewithdatemeanvalue

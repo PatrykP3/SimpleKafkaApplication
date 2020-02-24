@@ -11,6 +11,7 @@ import lombok.*;
 @ToString
 public class DateValue {
 
+    private Character table;
     private LocalDate date;
     private Float value;
 }
