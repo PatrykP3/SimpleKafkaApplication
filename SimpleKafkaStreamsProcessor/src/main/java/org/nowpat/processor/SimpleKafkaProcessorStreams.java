@@ -3,6 +3,8 @@ package org.nowpat.processor;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KeyValue;
@@ -87,11 +89,11 @@ public class SimpleKafkaProcessorStreams {
 
         kStreamsBuilder.    // output: currency code as a key, DateValue of date and currency value as a value - not finished
                 flatMapValues((value) -> Arrays.asList(value)).
-                selectKey((key, value) -> value.getEffectiveDate().format(formatter)).
+                selectKey((key, value) -> value.getEffectiveDate().format(formatter) + "." + value.getTable()). // key: table date.table name
                 peek((key, value ) -> log.info("step 1 key: {}, value: {}", key, value.toString())).
                 flatMapValues(NbpRates::getRates).
                 peek((key, value ) -> log.info("step 2 key: {}, value: {}", key, value.toString())).
-                map((key, value) -> KeyValue.pair(value.getCode(), new DateValue(value.getTable(), LocalDate.parse(key, formatter), value.getMid()))). //key: currency code, value: date and currency value
+                map((key, value) -> KeyValue.pair(value.getCode(), new DateValue(getStringPart(key, 2).charAt(0), LocalDate.parse(getStringPart(key, 1), formatter), value.getMid()))). //key: currency code, value: table, date and currency value
                 peek((key, value ) -> log.info("step 3 key : {}, value: {}", key, value.toString())).
                 to(topicsConfiguration.getOutput());
 
@@ -110,6 +112,17 @@ public class SimpleKafkaProcessorStreams {
 //                to(topicsConfiguration.getOutput());
 
         return kStreamsBuilder;
+    }
+
+    private String getStringPart(String input, Integer partNumber) { // String.split is of course simpler
+
+        Pattern pattern = Pattern.compile("(\\d\\d\\d\\d-\\d\\d-\\d\\d)[.](\\D)");
+        Matcher matcher = pattern.matcher(input);
+        matcher.find();
+
+        String part = matcher.group(partNumber);
+
+        return part;
     }
 
 //    private class CurrencyDataItializer implements Initializer {
