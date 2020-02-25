@@ -18,7 +18,7 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class SipleKafkaProducerController {
+public class SimpleKafkaProducerController {
 
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
