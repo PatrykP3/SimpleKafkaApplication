@@ -9,7 +9,6 @@ import lombok.ToString;
 @ToString
 public class NbpCurrencyRate {
 
-    private Character table;
     private String currency;
     private String code;
     private Float mid;
