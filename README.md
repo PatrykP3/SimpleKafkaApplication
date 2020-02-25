@@ -23,6 +23,9 @@ Acces to H2 database console:
  * credentials:
      * username _sa_
      * no password.
+     
+Table CURRENCY_MEAN_DATA is not filled - work in progress.
+ 
 ## Common parts
 Each module exposes various endpoints automatically provided by Spring Actuator and presented by Swagger under link _localhost:<port>//apibase.swagger-ui.html_.
 This user interface can be used to gracefully shutdown module.
@@ -49,7 +52,15 @@ Before running:
     * test_topic_nbprates
     * test_topic_processed
 
-For tests retention of 1000ms was used to allow testing frequent changes.
+For tests retention of 1000ms was used to allow testing frequent code changes.
+
+# Usage
+
+Send data from producer using 
+[http://localhost:8080/apibase/swagger-ui.html#/siple-kafka-producer-controller/getCurrencyTablesUsingPOST](http://localhost:8080/apibase/swagger-ui.html#/siple-kafka-producer-controller/getCurrencyTablesUsingPOST) link.
+
+Check result (calculation of mean value in given time range) in consumer using [http://localhost:8082/apibase/swagger-ui.html#/nbp-currency-mean-rate-controller/getMeanValueUsingGET](http://localhost:8082/apibase/swagger-ui.html#/nbp-currency-mean-rate-controller/getMeanValueUsingGET) link.
+ 
 
 **TODO**:
 * move Processor properties to application.yml
